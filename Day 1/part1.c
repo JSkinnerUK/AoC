@@ -25,8 +25,7 @@ int main()
             }
             else
             {
-                line[strcspn(line, "\n")] = 0;
-                int number = atoi(line);
+                int number = strtol(line, NULL, 10);
                 currentCalories += number;
             }
         }
