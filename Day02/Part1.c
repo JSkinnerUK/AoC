@@ -43,7 +43,7 @@ int main() {
     char opp, player;
     while (fscanf(fptr, "%c %c\n", &opp, &player) != EOF) {
       int winner = determineWinner(opp, player);
-      if (winner == 2)
+      if (winner == -2)
         return 1;
       if (winner == 0) {
         score += 3;
@@ -66,4 +66,5 @@ int main() {
   }
 
   fclose(fptr);
+  return 0;
 }
