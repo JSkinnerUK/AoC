@@ -1,70 +1,39 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include "../common/file_reader.h"
 
-int determineWinner(char opp, char player) {
-  switch (opp) {
-  case 'A':
-    if (player == 'X') {
-      return 0;
-    } else if (player == 'Y') {
-      return 1;
-    } else if (player == 'Z') {
-      return -1;
-    }
-  case 'B':
+int total = 0;
 
-    if (player == 'X') {
-      return -1;
-    } else if (player == 'Y') {
-      return 0;
-    } else if (player == 'Z') {
-      return 1;
+void handle_line(const char *line) {
+    int elf1S, elf1E, elf2S, elf2E;
+
+    sscanf(line, "%d-%d,%d-%d", &elf1S, &elf1E, &elf2S, &elf2E);
+
+    //Elf1 within Elf2
+    if(elf1S >= elf2S) {
+        if(elf1E <= elf2E) {
+            total += 1;
+            return;
+        }
     }
-  case 'C':
-    if (player == 'X') {
-      return 1;
-    } else if (player == 'Y') {
-      return -1;
-    } else if (player == 'Z') {
-      return 0;
+    
+    //Elf1 within Elf2
+    if(elf2S >= elf1S) {
+        if(elf2E <= elf1E) {
+            total += 1;
+            return;
+        }
     }
-  default:
-    return -2;
-  }
 }
 
-int main() {
-  FILE *fptr;
-  fptr = fopen("adventofcode.com_2022_day_2_input.txt", "r");
-  int score = 0;
+int main(int argc, char *argv[])
+{
+    const char *fileName = "input.txt"; // Name of the file to read
 
-  if (fptr != NULL) {
-    char opp, player;
-    while (fscanf(fptr, "%c %c\n", &opp, &player) != EOF) {
-      int winner = determineWinner(opp, player);
-      if (winner == -2)
-        return 1;
-      if (winner == 0) {
-        score += 3;
-      } else if (winner == 1) {
-        score += 6;
-      }
+    // Call the function from the file_reader.c file
+    read_file_lines(fileName, handle_line);
 
-      if (player == 'X') {
-        score += 1;
-      } else if (player == 'Y') {
-        score += 2;
-      } else if (player == 'Z') {
-        score += 3;
-      }
-    }
-    printf("Total: %d\n", score);
-  } else {
-    printf("Not able to open the file.");
-    return 1;
-  }
-
-  fclose(fptr);
-  return 0;
+    printf("%d\n", total);
+    return 0;
 }
