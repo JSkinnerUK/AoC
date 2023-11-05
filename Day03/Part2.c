@@ -37,7 +37,7 @@ void handle_line(const char *line) {
 
 int main(int argc, char *argv[])
 {
-    const char *fileName = "input.txt"; 
+    const char *fileName = "input_files/adventofcode.com_2022_day_3_input.txt"; 
     FILE *fptr;
     fptr = fopen(fileName, "r");
     char lines[3][128];

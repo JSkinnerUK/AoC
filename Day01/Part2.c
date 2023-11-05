@@ -13,7 +13,7 @@ int comp(const int *a, const int *b)
 int main()
 {
     FILE *fptr;
-    fptr = fopen("adventofcode.com_2022_day_1_input.txt", "r");
+    fptr = fopen("input_files/adventofcode.com_2022_day_1_input.txt", "r");
     char line[16];
 
     int currentCalories = 0;

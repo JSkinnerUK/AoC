@@ -36,7 +36,7 @@ int determineWinner(char opp, char player) {
 
 int main() {
   FILE *fptr;
-  fptr = fopen("adventofcode.com_2022_day_2_input.txt", "r");
+  fptr = fopen("input_files/adventofcode.com_2022_day_2_input.txt", "r");
   int score = 0;
 
   if (fptr != NULL) {
