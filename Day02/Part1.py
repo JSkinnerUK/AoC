@@ -5,16 +5,12 @@ criteria = (12, 13, 14)
 
 with open('Day02/input.txt', 'r') as file:
     for line in file:
-        failed = False
         gameId = int(re.findall(r'Game\s(\d+)', line)[0])
-        red = max(list(map(int, re.findall(r'(\d+)\sred', line))))
-        green = max(list(map(int, re.findall(r'(\d+)\sgreen', line))))
-        blue = max(list(map(int,re.findall(r'(\d+)\sblue', line))))
-        for l1, l2 in zip(criteria, (red, green, blue)):
-            if l1 < int(l2):
-                failed = True
-                break
-        if (failed == False): total+=gameId
+        match = re.findall(r'(\d+)\s(red|green|blue)', line)
+        red, green, blue = (max(int(num) for num, color in match if color == c) 
+                for c in ['red', 'green', 'blue'])
+        if all(l1 >= l2 for l1, l2 in zip(criteria, (red, green, blue))):
+            total+=gameId
 
 
 print(total)
