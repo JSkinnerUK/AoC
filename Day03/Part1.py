@@ -12,10 +12,9 @@ def getSymbols(data):
     return symbols
 
 def getNums(line):
-
-    x = re.finditer('[0-9]+', line)
-    y = [(m.start(0), m.end(0), m.group()) for m in x]
-    return y
+    matches = re.finditer('[0-9]+', line)
+    numbers = [(m.start(0), m.end(0), m.group()) for m in matches]
+    return numbers
 
 def checkContains(line, start, end, symbols):
     subString = line[max(start-1, 0):min(end+1, len(line))]
