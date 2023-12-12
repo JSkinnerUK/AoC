@@ -1,0 +1,46 @@
+import re
+from itertools import combinations
+
+with open('Day11/input.txt', 'r') as file:
+    data = [line.strip() for line in file]
+
+noGalaxies = ([],[])
+
+def galaxy(match, lineNum):
+    galaxy.counter += 1
+    galaxy.locations.append((lineNum, match.start()))
+    return str(galaxy.counter)
+
+galaxy.counter = 0
+galaxy.locations = []
+
+for i in range(len(data)):
+    if len(set(data[i])) == 1:
+        noGalaxies[0].append(i)
+for j in range(len(data[0])):
+    if len(set([item[j] for item in data])) == 1:
+        noGalaxies[1].append(j)
+
+def manhattanDistance(x, y):
+    return abs(x[0] - y[0]) + abs(x[1] - y[1])
+
+def calcExpandedDistance(x, y, expansion):
+    hOff = vOff = 0
+    for noGalaxy in noGalaxies[0]:
+        if min(x[0], y[0]) < noGalaxy < max(x[0], y[0]):
+            hOff += expansion - 1
+    for noGalaxy in noGalaxies[1]:
+        if min(x[1], y[1]) < noGalaxy < max(x[1], y[1]):
+            vOff += expansion - 1
+    return manhattanDistance(x, y) + hOff + vOff
+
+for i, line in enumerate(data):
+    data[i] = re.sub(r"#", lambda match: galaxy(match, i), line) 
+
+combos = combinations(galaxy.locations, 2)
+
+pathDistance = 0
+for combo in combos:
+    pathDistance += calcExpandedDistance(combo[0], combo[1], 1000000)
+
+print(pathDistance)
