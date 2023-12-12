@@ -1,22 +1,17 @@
-import re
-
 with open('Day05/input.txt', 'r') as file:
     data = [line for line in file]
 
 seedRange = data[0][data[0].find(':')+1:].strip().split(' ')
 seeds = [(int(seedRange[i]), int(seedRange[i+1])) for i in range(0, len(seedRange), 2)]
 
-mapsIndex = [(match.group(1), i) for i, s in enumerate(data) if "map" in s and (match := re.search(r'to-(\w+)\smap', s))]
-maps = [(map[0], []) for map in mapsIndex]
+mapsIndex = [i for i, s in enumerate(data) if "map" in s]
+maps = [[] for _ in range(len(mapsIndex))]
 
 for i, map in enumerate(mapsIndex):
-    for line in data[map[1]+1:]:
+    for line in data[map+1:]:
         if line == '\n':
             break
-        maps[i][1].append([int(x) for x in line[:-1].split(' ')])
-
-# print("Seeds:", seeds)
-# print('Maps:', maps)
+        maps[i].append([int(x) for x in line[:-1].split(' ')])
 
 def applyToSeedRange(start, end, transform, transformStart, transformEnd):
     unchanged = []
@@ -30,39 +25,29 @@ def applyToSeedRange(start, end, transform, transformStart, transformEnd):
         changed.append((overlapStart+transform, overlapEnd - overlapStart))
         if end > overlapEnd:
             unchanged.append((overlapEnd, end - overlapEnd))
-        print("CHANGED")
     else:
-        print("No change")
         unchanged.append((start, end - start))
 
-    print("Changed:", changed)
-    print("Unchanged:", unchanged)
     return unchanged, changed
 
 def applyTransform(seeds, transform):
     unchanged = []
     changed = []
-    print("Appling transform:", transform, "to seeds:", seeds)
     transform, transformStart, transformEnd = -(transform[1]-transform[0]), transform[1], transform[1] + transform[2]
     for seed in seeds:
         seedStart, seedEnd = seed[0], seed[0] + seed[1]
-        print("Seed:", seedStart, seedEnd)
         x,y = applyToSeedRange(seedStart, seedEnd, transform, transformStart, transformEnd)
         unchanged.extend(x)
         changed.extend(y)
-    print("Transform:", transform, transformStart, transformEnd)
     return unchanged, changed
 
-for mapName, map in maps:
-    print('-'*50)
-    print("Map:", mapName, map)
+for map in maps:
     x = []
     for transform in map:
         p, v = applyTransform(seeds, transform)
         seeds = p
         x.extend(v)
     seeds.extend(x)
-    print(seeds)
 
 
 first_element = lambda x: x[0]
